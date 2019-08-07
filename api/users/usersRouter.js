@@ -33,6 +33,23 @@ router.post('/:id/posts', validatePost, (req, res) => {
         });
 });
 
+/**
+ * @api {get} users Request all users
+ * @apiName GetUsers
+ * @apiGroup Users
+ * 
+ * @apiParam None
+ * @apiSuccess {Array} users Array of users
+ * 
+ * @apiSuccessExample Success-Response:
+ *      HTTP 200 Ok
+ *      [{
+ *          "id": 1,
+ *          "name": "Frodo Baggins"
+ *      }]
+ * 
+ * @apiError Internal Server Error
+ */
 router.get('/', (req, res) => {
     Users.get()
         .then(users => {
