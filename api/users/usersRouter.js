@@ -18,6 +18,8 @@ router.post('/', validateUser, (req, res) => {
         });
 });
 
+
+
 router.post('/:id/posts', validatePost, (req, res) => {
     let { newPost } = req;
     let { id } = req.params;

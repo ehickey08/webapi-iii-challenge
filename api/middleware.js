@@ -13,43 +13,49 @@ function logger(req, res, next) {
 
 function validateUserId(req, res, next) {
     let { id } = req.params;
-    if (id) {
-        Users
-            .getById(id)
+    if (Number.isInteger(+id)) {
+        Users.getById(id)
             .then(user => {
-                //console.log('test1')
-                if(user.id){
-                    req.user = user
+                if (user && user.id) {
+                    req.user = user;
                     next();
+                } else {
+                    res.status(404).json({
+                        message:
+                            'The user with the specified ID does not exist.',
+                    });
                 }
-                //console.log('test2')
             })
             .catch(err => {
-                res.status(404).json({
-                    message: 'The user with the specified ID does not exist.',
+                res.status(500).json({
+                    message: 'Internal server error. ',
                 });
             });
+    } else {
+        res.status(404).json({
+            message: 'The user_id param should be an integer.',
+        });
     }
 }
 
 function validateUser(req, res, next) {
-    let newUser = req.body
-    if(!newUser)
-        return res.status(400).json({message: "Missing user data."})
-    if(!newUser.name)
-        return res.status(400).json({message: "Missing required name field"})
-    req.user = newUser
-    next()
+    let newUser = req.body;
+    if (!newUser)
+        return res.status(400).json({ message: 'Missing user data.' });
+    if (!newUser.name)
+        return res.status(400).json({ message: 'Missing required name field' });
+    req.user = newUser;
+    next();
 }
 
 function validatePost(req, res, next) {
-    let newPost = req.body
-    if(!newPost)
-        return res.status(400).json({message: "Missing user data."})
-    if(!newPost.text)
-        return res.status(400).json({message: "Missing required text field"})
-    req.newPost = newPost
-    next()
+    let newPost = req.body;
+    if (!newPost)
+        return res.status(400).json({ message: 'Missing user data.' });
+    if (!newPost.text)
+        return res.status(400).json({ message: 'Missing required text field' });
+    req.newPost = newPost;
+    next();
 }
 
 module.exports = { logger, validateUserId, validateUser, validatePost };
