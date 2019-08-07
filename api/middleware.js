@@ -1,5 +1,6 @@
 //custom middleware
 const Users = require('../users/userDb');
+const Posts = require('../posts/postDb');
 
 function logger(req, res, next) {
     let { method, url } = req;
@@ -38,6 +39,32 @@ function validateUserId(req, res, next) {
     }
 }
 
+function validatePostId(req, res, next) {
+    let { id } = req.params;
+    if (Number.isInteger(+id)) {
+        Posts.getById(id)
+            .then(post => {
+                if (post && post.id) {
+                    req.post = post;
+                    next();
+                } else {
+                    res.status(404).json({
+                        message:
+                            'The post with the specified ID does not exist.',
+                    });
+                }
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message: 'Internal server error. ',
+                });
+            });
+    } else {
+        res.status(404).json({
+            message: 'The post_id param should be an integer.',
+        });
+    }
+}
 function validateUser(req, res, next) {
     let newUser = req.body;
     if (!newUser)
@@ -51,11 +78,11 @@ function validateUser(req, res, next) {
 function validatePost(req, res, next) {
     let newPost = req.body;
     if (!newPost)
-        return res.status(400).json({ message: 'Missing user data.' });
+        return res.status(400).json({ message: 'Missing post data.' });
     if (!newPost.text)
         return res.status(400).json({ message: 'Missing required text field' });
     req.newPost = newPost;
     next();
 }
 
-module.exports = { logger, validateUserId, validateUser, validatePost };
+module.exports = { logger, validateUserId, validatePostId, validateUser, validatePost };
