@@ -7,7 +7,8 @@
     "server": "nodemon index.js",
     "api-docs": "apidoc -f .js -i ./api -o apidoc/",
     "build-docs": "apidoc-markdown -p ./apidoc/ -o README.md",
-    "build-api": "npm-run-all api-docs build-docs"
+    "build-api": "npm-run-all api-docs build-docs",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

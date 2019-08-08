@@ -2,7 +2,7 @@
 const Users = require('../users/userDb');
 const Posts = require('../posts/postDb');
 
-function logger(req, res, next) {
+exports.logger = function logger(req, res, next) {
     let { method, url } = req;
     let timestamp = new Date();
     console.log(
@@ -12,7 +12,7 @@ function logger(req, res, next) {
     next();
 }
 
-function validateUserId(req, res, next) {
+exports.validateUserId = function validateUserId(req, res, next) {
     let { id } = req.params;
     if (Number.isInteger(+id)) {
         Users.getById(id)
@@ -39,7 +39,7 @@ function validateUserId(req, res, next) {
     }
 }
 
-function validatePostId(req, res, next) {
+exports.validatePostId = function validatePostId(req, res, next) {
     let { id } = req.params;
     if (Number.isInteger(+id)) {
         Posts.getById(id)
@@ -65,7 +65,7 @@ function validatePostId(req, res, next) {
         });
     }
 }
-function validateUser(req, res, next) {
+exports.validateUser = function validateUser(req, res, next) {
     let newUser = req.body;
     if (!newUser)
         return res.status(400).json({ message: 'Missing user data.' });
@@ -75,7 +75,8 @@ function validateUser(req, res, next) {
     next();
 }
 
-function validatePost(req, res, next) {
+exports.validatePost = function validatePost(req, res, next, test) {
+    console.log(req)
     let newPost = req.body;
     if (!newPost)
         return res.status(400).json({ message: 'Missing post data.' });
@@ -84,5 +85,3 @@ function validatePost(req, res, next) {
     req.newPost = newPost;
     next();
 }
-
-module.exports = { logger, validateUserId, validatePostId, validateUser, validatePost };

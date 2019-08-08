@@ -1,10 +1,11 @@
 const express = require('express');
 
-const { validateUserId, validateUser, validatePost } = require('../middleware');
+const { validateUserId, validatePost, validateUser } = require('../middleware');
 const Users = require('../../users/userDb');
 const Posts = require('../../posts/postDb');
 
 const router = express.Router();
+
 router.use('/:id', validateUserId);
 
 router.post('/', validateUser, (req, res) => {
@@ -20,7 +21,7 @@ router.post('/', validateUser, (req, res) => {
 
 
 
-router.post('/:id/posts', validatePost, (req, res) => {
+router.post('/:id/posts', (req, res, next) => validatePost(req, res, next, 'test'), (req, res) => {
     let { newPost } = req;
     let { id } = req.params;
     newPost.user_id = id;
